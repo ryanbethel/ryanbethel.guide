@@ -3,9 +3,9 @@ import url from 'node:url'
 import { readFileSync } from 'node:fs'
 import { URL } from 'node:url'
 import { Arcdown } from 'arcdown'
-import HljsLineWrapper from '../../lib/hljs-line-wrapper.mjs'
-import { default as defaultClassMapping } from '../../lib/markdown-class-mappings.mjs'
-import { getWebMentions } from '../../../shared/webmentions.mjs'
+import HljsLineWrapper from '../../../../../../../../../../../app/lib/hljs-line-wrapper.mjs'
+import { default as defaultClassMapping } from '../../../../../../../../../../../app/lib/markdown-class-mappings.mjs'
+import { getWebMentions } from '../../../../../../../../../../../shared/webmentions.mjs'
 
 /** @type {import('@enhance/types').EnhanceApiFn} */
 export async function get(req) {
@@ -26,12 +26,13 @@ export async function get(req) {
   })
 
   const { path: activePath } = req
-  let docPath = activePath.replace(/^\/?blog\//, '') || 'index'
+  // let docPath = activePath.replace(/^\/?blog\//, '') || 'index'
+  let docPath = convertToDocPath(activePath) || 'index'
   if (docPath.endsWith('/')) {
     docPath += 'index' // trailing slash == index.md file
   }
 
-  const docURL = new URL(`../../blog/${docPath}.md`, import.meta.url)
+  const docURL = new URL(`../../../../../../../../../../../app/blog/posts/${docPath}.md`, import.meta.url)
 
   let docMarkdown
   try {
@@ -43,8 +44,8 @@ export async function get(req) {
   const post = await arcdown.render(docMarkdown)
   const mentions = (await getWebMentions()).filter(mention => (mention.targetPath === activePath && mention.approved))
 
-  let here = dirname(url.fileURLToPath(import.meta.url))
-  let hCardPath = join(here, '..', 'h-card.json')
+  // let here = dirname(url.fileURLToPath(import.meta.url)) 
+  let hCardPath = new URL(`../../../../../../../../../../../app/api/h-card.json`, import.meta.url)
   let hCard = JSON.parse(readFileSync(hCardPath, 'utf-8'))
 
   return {
@@ -54,4 +55,19 @@ export async function get(req) {
       hCard
     },
   }
+}
+
+function convertToDocPath(path) {
+  const parts = path.split('/')
+
+  const year = parts[1]
+  const month = parts[2].padStart(2, '0')
+  const day = parts[3].padStart(2, '0')
+  const type = parts[4]
+  const ordinal = parts[5]
+  const slug = parts[6]
+
+  const docPath = `${year}-${month}-${day}-${slug}`
+
+  return docPath
 }
