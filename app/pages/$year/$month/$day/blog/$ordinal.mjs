@@ -1,7 +1,7 @@
 /** @type {import('@enhance/types').EnhanceElemFn} */
 export default function ({ html, state }) {
   const { store } = state
-  const { post, mentions } = store
+  const { post, mentions, shortLink } = store
   const { frontmatter } = post
   const { description = '', published = '', title = '' } = frontmatter
 
@@ -13,6 +13,7 @@ export default function ({ html, state }) {
       </style>
       <site-layout>
         <article class="h-entry font-body leading4 m-auto pt0 pb0 pt4-lg pb4-lg">
+          <a href="${shortLink}">${shortLink}</a>
           <h1 class="p-name font-heading font-bold mb0 mb4-lg text3 text5-lg tracking-1 leading1">${title}</h1>
           <p class='date dt-published mb0 mb4-lg'>${published}</p>
           <section slot="e-content doc">${post.html}</section>
