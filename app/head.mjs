@@ -3,7 +3,7 @@ import { getLinkTag } from '@enhance/arc-plugin-styles/get-styles'
 export default function Head() {
   const siteUrl = process.env.SITE_URL || 'http://localhost:3333'
   const me = 'https://indieweb.social/@ryanbethel'
-  return`
+  return `
     <!DOCTYPE html>
     <html lang='en'>
       <head>
@@ -14,7 +14,7 @@ export default function Head() {
         <link rel='stylesheet' href='/_public/css/a11y-dark.min.css' />
         <link rel="webmention" href="${siteUrl}/webmention">
         <link rel="icon" type="image/svg" sizes="32x32" href="/_public/favicon.svg">
-        ${me && `<link href="${me}" rel="me">`}
+        ${me ? `<link href="${me}" rel="me">` : ''}
       </head>
   `
 }
