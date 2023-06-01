@@ -7,7 +7,7 @@ export default function ({ html, state }) {
     <my-h-card class="hidden"></my-h-card>
     <site-layout>
       <main>
-        <combined-posts></combined-posts>
+        <blog-posts></blog-posts>
         <blog-pagination
           limit="${limit}"
           offset="${offset}"

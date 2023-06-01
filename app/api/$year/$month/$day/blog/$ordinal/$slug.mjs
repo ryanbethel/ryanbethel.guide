@@ -1,7 +1,5 @@
-import { dirname, join } from 'node:path'
-import { DateToSxg } from 'newbase60'
-import url from 'node:url'
 import { readFileSync } from 'node:fs'
+import calcShortLink from 'enhance-short/calc-short-link/index.js'
 import { URL } from 'node:url'
 import { Arcdown } from 'arcdown'
 import HljsLineWrapper from '../../../../../../lib/hljs-line-wrapper.mjs'
@@ -54,29 +52,11 @@ export async function get(req) {
       post,
       mentions,
       hCard,
-      shortLink: getShortLink(activePath)
+      shortLink: calcShortLink(activePath)
     },
   }
 }
 
-function getShortLink(path) {
-  const shortDomain = process.env.SHORT_DOMAIN || 'http://localhost:3333'
-  const parts = path.split('/')
-
-  const year = parts[1]
-  const month = parts[2].padStart(2, '0')
-  const day = parts[3].padStart(2, '0')
-  const type = parts[4]
-  const ordinal = parts[5]
-
-  const sxg = DateToSxg(new Date(`${year}-${month}-${day}`))
-
-  const types = {
-    blog:'b',
-    note:'n',
-  }
-  return `${shortDomain}/${types[type]}${sxg}${ordinal}`
-}
 
 function convertToDocPath(path) {
   const parts = path.split('/')

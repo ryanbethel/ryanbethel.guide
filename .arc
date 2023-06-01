@@ -9,7 +9,7 @@ architect/plugin-lambda-invoker
 enhance/arc-plugin-enhance
 create-post-metadata
 create-rss-feed
-short-cut
+enhance-short
 
 @events
 check-webmention
